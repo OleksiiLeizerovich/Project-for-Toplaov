@@ -5,62 +5,11 @@
 using namespace std;
 
 class University;
-class Faculty;
 class Department;
 class Teacher;
 class Human;
 class Student;
 class Course;
-
-class University
-{
-private:
-    string name;
-    string location;
-    int establishmentYear;
-    int numberOfFaculties;
-    vector<Faculty *> faculties;
-
-public:
-    University() : establishmentYear(0), numberOfFaculties(0) {}
-    void setName(const string &n) { name = n; }
-    void setLocation(const string &l) { location = l; }
-    void setEstablishmentYear(int year) { establishmentYear = year; }
-    void setNumberOfFaculties(int num) { numberOfFaculties = num; }
-    void getDetails()
-    {
-        cout << "\n=== Деталі про університет ===" << endl;
-        cout << "Ім'я: " << name << endl;
-        cout << "Локація: " << location << endl;
-        cout << "Заснування: " << establishmentYear << endl;
-        cout << "Кількість факультетів: " << numberOfFaculties << endl;
-        cout << "============================" << endl;
-    };
-    vector<Faculty *> getFaculties() { return faculties; }
-    void addFaculty(Faculty *faculty);
-    void removeFaculty(Faculty *faculty);
-};
-
-class Department
-{
-private:
-    int ID;
-    string headOfDepartment;
-    string name;
-
-public:
-    void setID(int id) { ID = id; }
-    void setName(const string &n) { name = n; }
-    void setHeadOfDepartment(const string &head) { headOfDepartment = head; }
-    void getDetails() const
-    {
-        cout << "\n=== Деталі про департамент ===" << endl;
-        cout << "ID: " << ID << endl;
-        cout << "Ім'я: " << name << endl;
-        cout << "Голова департаменту: " << headOfDepartment << endl;
-        cout << "============================" << endl;
-    }
-};
 
 class Faculty
 {
@@ -88,6 +37,84 @@ public:
     vector<Teacher *> getTeachers() const;
     void addTeacher(Teacher *teacher);
     void removeTeacher(Teacher *teacher);
+};
+
+class University
+{
+private:
+    string name;
+    string location;
+    int establishmentYear;
+    int numberOfFaculties;
+    vector<Faculty *> faculties;
+
+public:
+    University() : establishmentYear(0), numberOfFaculties(0) {}
+    void setName(const string &n) { name = n; }
+    void setLocation(const string &l) { location = l; }
+    void setEstablishmentYear(int year) { establishmentYear = year; }
+    void setNumberOfFaculties(int num) { numberOfFaculties = num; }
+    void getDetails()
+    {
+        cout << "\n=== Деталі про університет ===" << endl;
+        cout << "Ім'я: " << name << endl;
+        cout << "Локація: " << location << endl;
+        cout << "Заснування: " << establishmentYear << endl;
+        cout << "Кількість факультетів: " << faculties.size() << endl;
+        cout << "============================" << endl;
+    };
+    void FullDetails()
+    {
+        getDetails();
+
+        cout << "\n=== Детальна інформація про всі факультети ===" << endl;
+        if (faculties.empty())
+        {
+            cout << "Факультети відсутні" << endl;
+        }
+        else
+        {
+            for (Faculty *faculty : faculties)
+            {
+                faculty->getDetails();
+            }
+        }
+        cout << "===========================================" << endl;
+    }
+    vector<Faculty *> getFaculties() { return faculties; }
+    void addFaculty(Faculty *faculty)
+    {
+        faculties.push_back(faculty);
+    }
+    void removeFaculty(Faculty *faculty) {
+        for(auto it = faculties.begin(); it != faculties.end(); ++it) {
+            if(*it == faculty) {
+                faculties.erase(it);
+                break;
+            }
+        }
+    }
+};
+
+class Department
+{
+private:
+    int ID;
+    string headOfDepartment;
+    string name;
+
+public:
+    void setID(int id) { ID = id; }
+    void setName(const string &n) { name = n; }
+    void setHeadOfDepartment(const string &head) { headOfDepartment = head; }
+    void getDetails() const
+    {
+        cout << "\n=== Деталі про департамент ===" << endl;
+        cout << "ID: " << ID << endl;
+        cout << "Ім'я: " << name << endl;
+        cout << "Голова департаменту: " << headOfDepartment << endl;
+        cout << "============================" << endl;
+    }
 };
 
 class Human
@@ -165,7 +192,6 @@ private:
     Teacher *professor;
 
 public:
-    
     Course() : professor(nullptr) {}
     void addStudent(Student *student);
     void removeStudent(Student *student);
@@ -177,50 +203,56 @@ int main()
 {
     setlocale(LC_ALL, "uk-UA.UTF-8");
 
-    // University
-    University* univ = new University();
-    univ->setName("Київський національний університет");
-    univ->setLocation("Київ");
-    univ->setEstablishmentYear(1834);
-    univ->setNumberOfFaculties(13);
-    univ->getDetails();
+    University *univ = new University();
 
-    // Faculty
-    Faculty* fac = new Faculty();
-    fac->setName("Факультет інформаційних технологій");
-    fac->setDean("Проф. Іваненко І.І.");
-    fac->getDetails();
+    string name, location;
+    int year;
 
-    // Department
-    Department* dept = new Department();
-    dept->setID(101);
-    dept->setName("Кафедра програмної інженерії");
-    dept->setHeadOfDepartment("Доц. Петренко П.П.");
-    dept->getDetails();
+    cout << "=== Введіть інформацію про університет ===" << endl;
+    cout << "Назва університету: ";
+    getline(cin, name);
+    univ->setName(name);
 
-    // Student
-    Student* stud = new Student();
-    stud->setName("Сидоренко Олена");
-    stud->setID("ST001");
-    stud->setYear(2);
-    stud->setCourse(3);
-    stud->setStateFunded(true);
-    stud->getDetails();
+    cout << "Місце розташування: ";
+    getline(cin, location);
+    univ->setLocation(location);
 
-    // Teacher
-    Teacher* teach = new Teacher();
-    teach->setName("Коваленко Михайло");
-    teach->setID("TC001");
-    teach->setPosition("Доцент");
-    teach->setExperience(10);
-    teach->setClassroom(305);
-    teach->getDetails();
+    cout << "Рік заснування: ";
+    cin >> year;
+    cin.ignore();
+    univ->setEstablishmentYear(year);
 
-    // Human (використовуємо через Student, оскільки Human є абстрактним)
-    Human* human = new Student();
-    human->setName("Мельник Ірина");
-    human->setID("ST002");
-    human->setYear(1);
-    human->getDetails();
+    int numFaculties;
+    cout << "Введіть кількість факультетів: ";
+    cin >> numFaculties;
+    cin.ignore();
+
+    for (int i = 0; i < numFaculties; i++)
+    {
+        Faculty *faculty = new Faculty();
+        string facultyName, deanName;
+
+        cout << "\n=== Факультет " << i + 1 << " ===" << endl;
+        cout << "Назва факультету: ";
+        getline(cin, facultyName);
+        faculty->setName(facultyName);
+
+        cout << "Декан факультету: ";
+        getline(cin, deanName);
+        faculty->setDean(deanName);
+
+        univ->addFaculty(faculty);
+    }
+
+    cout << "\nВся інформація про університет та факультети:" << endl;
+    univ->FullDetails();
+
+    vector<Faculty *> faculties = univ->getFaculties();
+    for (Faculty *faculty : faculties)
+    {
+        delete faculty;
+    }
+    delete univ;
+
     return 0;
 }
